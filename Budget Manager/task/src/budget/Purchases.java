@@ -14,6 +14,11 @@ public class Purchases {
     }
 
     public static void displayPurchasesList() {
+        if (purchasesList.isEmpty()) {
+            SystemOperations.printData("The purchase list is empty!");
+            return;
+        }
+
         for (Map.Entry<String, Float> entry : purchasesList.entrySet()) {
             System.out.printf("%s $%.2f\n", entry.getKey(), entry.getValue());
         }
