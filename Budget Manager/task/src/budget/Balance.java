@@ -1,6 +1,6 @@
 package budget;
 
-public class BalanceHandler {
+public class Balance {
     private static float balance = 0;
 
     public static float getBalance() {
@@ -8,6 +8,6 @@ public class BalanceHandler {
     }
 
     public static void updateBalance(float value) {
-        BalanceHandler.balance += value;
+        Balance.balance += value;
     }
 }
