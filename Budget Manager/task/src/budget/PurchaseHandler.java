@@ -1,57 +1,47 @@
 package budget;
 
 
-import java.util.*;
+public class PurchaseHandler {
+
+    static void printPurchaseMenu() {
+        String purchaseTypeMenu = """
+                1) Food
+                2) Clothes
+                3) Entertainment
+                4) Other
+                5) Back""";
+
+        SystemOperations.printData(purchaseTypeMenu);
+    }
 
 
-public class PurchaseMenu {
+    private static void createPurchaseRecord(PurchaseType type) {
+        SystemOperations.printData("Enter purchase name:");
+        String purchaseName = SystemOperations.readData();
 
-    private static final Map<PurchaseType, Map<String, Float>> purchaseList = new HashMap<>();
-    private static final PurchaseType[] purchaseTypes = PurchaseType.getPurchaseTypes();
+        SystemOperations.printData("Enter its price:");
+        float purchaseCost = Float.parseFloat(SystemOperations.readData());
 
-    static void displayPurchaseTypeMenu() {
-        for (PurchaseType type : purchaseTypes) {
-            System.out.printf("%d) %s\n", type.getOptionId(), type.getOptionName());
+        PurchasesListHandler.updatePurchasesList(new Purchase(type, purchaseName, purchaseCost));
+    }
+
+
+    static void runPurchaseMenu() {
+        while (true) {
+            printPurchaseMenu();
+
+            int selectedOptionInt = Integer.parseInt(SystemOperations.readData());
+
+            if (selectedOptionInt == 5) break;
+
+            PurchaseType selectedOptionType = PurchaseType.getPurchaseTypeById(selectedOptionInt);
+
+            switch (selectedOptionType) {
+                case FOOD -> createPurchaseRecord(PurchaseType.FOOD);
+                case CLOTHES -> createPurchaseRecord(PurchaseType.CLOTHES);
+                case ENTERTAINMENT -> createPurchaseRecord(PurchaseType.ENTERTAINMENT);
+                case OTHER -> createPurchaseRecord(PurchaseType.OTHER);
+            }
         }
-
-        System.out.println("5) Back");
-    }
-
-
-    private static Map<PurchaseType, Map<String, Float>> getPurchaseList() {
-        return purchaseList;
-    }
-
-
-    static boolean isPurchaseListIsEmpty() {
-        return getPurchaseList().isEmpty();
-    }
-
-
-    static Map<String, Float> readPurchaseData() {
-        System.out.println("Enter purchase name:");
-        String purchaseName = SystemOperations.readInputData();
-
-        System.out.println("Enter its price:");
-        float purchaseCost = Float.parseFloat(SystemOperations.readInputData());
-
-        return Map.of(purchaseName, purchaseCost);
-    }
-
-
-    /*
-    static void processPurchaseTypeMenuOption(PurchaseType purchaseType) {
-        switch (purchaseType) {
-            case FOOD -> System.out.println("Food");
-            case CLOTHES -> System.out.println("Clothes");
-            case ENTERTAINMENT -> System.out.println("Entertainment");
-            case OTHER -> System.out.println("Other");
-        }
-    }
-     */
-
-
-    static void updatePurchasesList(PurchaseType type, Map<String, Float> purchaseData) {
-        Float tempValue = getPurchaseList().get(type).putIfAbsent(purchaseData.);
     }
 }
