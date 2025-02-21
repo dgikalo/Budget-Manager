@@ -5,6 +5,7 @@ public class PurchaseHandler {
 
     static void printPurchaseMenu() {
         String purchaseTypeMenu = """
+                Choose the type of purchase
                 1) Food
                 2) Clothes
                 3) Entertainment
@@ -23,6 +24,9 @@ public class PurchaseHandler {
         float purchaseCost = Float.parseFloat(SystemOperations.readData());
 
         PurchasesListHandler.updatePurchasesList(new Purchase(type, purchaseName, purchaseCost));
+
+        SystemOperations.printData("Purchase was added!");
+        System.out.println();
     }
 
 
@@ -31,6 +35,7 @@ public class PurchaseHandler {
             printPurchaseMenu();
 
             int selectedOptionInt = Integer.parseInt(SystemOperations.readData());
+            System.out.println();
 
             if (selectedOptionInt == 5) break;
 

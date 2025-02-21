@@ -5,7 +5,8 @@ public enum PurchaseType {
     FOOD("Food", 1),
     CLOTHES("Clothes", 2),
     ENTERTAINMENT("Entertainment", 3),
-    OTHER("Other", 4);
+    OTHER("Other", 4),
+    ALL("All", 5);
 
     private final String optionName;
     private final int optionId;
@@ -16,22 +17,22 @@ public enum PurchaseType {
     }
 
 
-    public String getOptionName() {
+    String getOptionName() {
         return optionName;
     }
 
 
-    public int getOptionId() {
+    int getOptionId() {
         return optionId;
     }
 
 
-    public static PurchaseType[] getPurchaseTypes() {
+    static PurchaseType[] getPurchaseTypes() {
         return PurchaseType.values();
     }
-    
-    
-    public static PurchaseType getPurchaseTypeById(int optionId) {
+
+
+    static PurchaseType getPurchaseTypeById(int optionId) {
         PurchaseType returnPurchaseType = null;
 
         for (PurchaseType purchaseType : getPurchaseTypes()) {

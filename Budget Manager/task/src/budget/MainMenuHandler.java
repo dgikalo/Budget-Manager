@@ -1,17 +1,9 @@
 package budget;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.SimpleTimeZone;
 
-public final class MainMenu {
+public final class MainMenuHandler {
 
-    private MainMenu() {
-    }
-
-
-    // Main menu options list
-    static void printMainMenu() {
+    private static void printMainMenu() {
         String mainMenuOptions = """
                 Choose your action:
                 1) Add income
@@ -20,77 +12,64 @@ public final class MainMenu {
                 4) Balance
                 0) Exit""";
 
-        // Print Main menu options list
-        System.out.println(mainMenuOptions);
-
-        // Read selected option
-        int passedMainMenuOption = Integer.parseInt(SystemOperations.readInputData());
-
-        // Pass selected Main menu option
-        processMainMenuOption(passedMainMenuOption);
-    }
-
-
-    // Process selected Main menu option's function
-    private static void processMainMenuOption(int option) {
-        switch (option) {
-            case 1 -> addIncomeOption();
-            case 2 -> addPurchaseOption();
-            case 3 -> System.out.println("3"); // showListOfPurchasesOption();
-            case 4 -> showBalanceOption();
-            case 0 -> exitProgramOption();
-        }
+        SystemOperations.printData(mainMenuOptions);
     }
 
 
     private static void addIncomeOption() {
-        System.out.println("Enter income:");
+        SystemOperations.printData("Enter income:");
 
-        float incomeValue = Float.parseFloat(SystemOperations.readInputData());
+        float incomeValue = Float.parseFloat(SystemOperations.readData());
 
         Balance.updateBalance(incomeValue);
 
-        System.out.println("Income was added!");
+        SystemOperations.printData("Income was added!");
+        System.out.println();
+    }
+
+
+    private static void balanceOption() {
+        float balanceValue = Balance.getBalance();
+
+        SystemOperations.printData(String.format("Balance: $%.2f", balanceValue));
+        System.out.println();
     }
 
 
     private static void addPurchaseOption() {
-        PurchaseMenu.displayPurchaseTypeMenu();
-
-
+        PurchaseHandler.runPurchaseMenu();
     }
 
 
-    /*
-    private static void showListOfPurchasesOption() {
-        if (Purchase.isPurchaseListIsEmpty()) {
-            System.out.println("The purchase list is empty!");
-
-            return;
-        }
-
-        int selectedPurchaseTypeMenuOption = Integer.parseInt(SystemOperations.readInputData());
-
-        if (selectedPurchaseTypeMenuOption == 5) {
-            return;
-        }
-
-        PurchaseType selectedPurchaseType = PurchaseType.getPurchaseTypeById(selectedPurchaseTypeMenuOption);
-
-        if (selectedPurchaseType != null) {
-            Purchase.processPurchaseTypeMenuOption(selectedPurchaseType);
-        }
-    }
-     */
-
-
-    private static void showBalanceOption() {
-        System.out.printf("Balance: $%.2f\n", Balance.getBalance());
+    private static void showListOfPurchases() {
+        PurchasesListHandler.runPurchaseTypesMenu();
     }
 
 
-    private static void exitProgramOption() {
-        System.out.println("Bye!");
+    private static void exitOption() {
+        SystemOperations.printData("Bye!");
+
         System.exit(0);
+    }
+
+
+    static void runMainMenu() {
+        while (true) {
+            MainMenuHandler.printMainMenu();
+
+            int selectedMainMenuOption = Integer.parseInt(SystemOperations.readData());
+            System.out.println();
+
+            if (selectedMainMenuOption == 0) break;
+
+            switch (selectedMainMenuOption) {
+                case 1 -> addIncomeOption();
+                case 2 -> addPurchaseOption();
+                case 3 -> showListOfPurchases();
+                case 4 -> balanceOption();
+            }
+        }
+
+        exitOption();
     }
 }
