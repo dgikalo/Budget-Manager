@@ -1,6 +1,6 @@
 package budget;
 
-public class Balance {
+public class BalanceUtility {
     private static float balance = 0;
 
 
@@ -10,6 +10,6 @@ public class Balance {
 
 
     public static void updateBalance(float value) {
-        Balance.balance += value;
+        balance += value;
     }
 }
