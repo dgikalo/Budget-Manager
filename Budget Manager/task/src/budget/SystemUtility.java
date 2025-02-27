@@ -9,7 +9,8 @@ public class SystemOperations {
         return scanner.nextLine();
     }
 
-    public static void printData(String string) {
-        System.out.println(string);
+
+    static void printError() {
+        System.out.println("The purchase list is empty!");
     }
 }
