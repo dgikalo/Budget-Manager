@@ -1,46 +1,49 @@
 package budget;
 
 
-public enum PurchaseType {
+import java.util.Arrays;
+
+
+public enum PurchaseCategory {
     FOOD("Food", 1),
     CLOTHES("Clothes", 2),
     ENTERTAINMENT("Entertainment", 3),
     OTHER("Other", 4),
     ALL("All", 5);
 
-    private final String optionName;
-    private final int optionId;
 
-    PurchaseType(String optionName, int optionId) {
-        this.optionName = optionName;
-        this.optionId = optionId;
+    private final String name;
+    private final int id;
+
+
+    PurchaseCategory(String name, int id) {
+        this.name = name;
+        this.id = id;
     }
 
 
-    String getOptionName() {
-        return optionName;
+    String getName() {
+        return name;
     }
 
 
-    int getOptionId() {
-        return optionId;
+    int getId() {
+        return id;
     }
 
 
-    static PurchaseType[] getPurchaseTypes() {
-        return PurchaseType.values();
+    static PurchaseCategory[] getTypes(boolean isExtended) {
+        return (isExtended)
+                ? PurchaseCategory.values()
+                : new PurchaseCategory[]{FOOD, CLOTHES, ENTERTAINMENT, OTHER};
     }
 
 
-    static PurchaseType getPurchaseTypeById(int optionId) {
-        PurchaseType returnPurchaseType = null;
-
-        for (PurchaseType purchaseType : getPurchaseTypes()) {
-            if (purchaseType.getOptionId() == optionId) {
-                returnPurchaseType = purchaseType;
-            }
-        }
-
-        return returnPurchaseType;
+    static PurchaseCategory getTypeById(int id) {
+        return Arrays
+                .stream(getTypes(true))
+                .filter(category -> category.id == id)
+                .findFirst()
+                .orElse(null);
     }
 }
