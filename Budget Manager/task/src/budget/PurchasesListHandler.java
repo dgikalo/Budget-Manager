@@ -1,18 +1,18 @@
 package budget;
 
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
 
 
-public class PurchasesListUtility {
+public class PurchasesListHandler {
 
     private static final List<Purchase> purchasesList = new ArrayList<>();
 
 
     private static void printPurchasesListMenu() {
         System.out.println("Choose the type of purchases");
-        for (PurchaseCategory category : PurchaseCategory.getTypes(true)) {
+        for (Category category : Category.getTypes(true)) {
             System.out.printf("%d) %s\n", category.getId(), category.getName());
         }
 
@@ -20,8 +20,8 @@ public class PurchasesListUtility {
     }
 
 
-    private static boolean isListIsEmpty(PurchaseCategory category) {
-        return (category.equals(PurchaseCategory.ALL))
+    private static boolean isListIsEmpty(Category category) {
+        return (category.equals(Category.ALL))
                 ? purchasesList.isEmpty()
                 : purchasesList
                         .stream()
@@ -34,15 +34,14 @@ public class PurchasesListUtility {
 
         float price = purchase.price();
 
-        BalanceUtility.updateBalance(-price);
-        TotalSumUtility.updateTotalSum(purchase.category(), price);
+        TotalSumHandler.updateTotalSum(purchase.category(), price);
     }
 
 
-    private static void printPurchasesList(PurchaseCategory category) {
+    private static void printPurchasesList(Category category) {
         System.out.println(category.getName() + ":");
 
-        if (category.equals(PurchaseCategory.ALL)) {
+        if (category.equals(Category.ALL)) {
             purchasesList.forEach(purchase -> System.out.printf("%s $%.2f\n", purchase.name(), purchase.price()));
 
         } else {
@@ -52,7 +51,7 @@ public class PurchasesListUtility {
                     .forEach(purchase -> System.out.printf("%s $%.2f\n", purchase.name(), purchase.price()));
         }
 
-        System.out.printf("Total sum: $%.2f\n", TotalSumUtility.getTotalSum(category));
+        System.out.printf("Total sum: $%.2f\n\n", TotalSumHandler.getTotalSum(category));
     }
 
 
@@ -63,7 +62,7 @@ public class PurchasesListUtility {
 
     public static void startPurchaseTypesMenu() {
         while (true) {
-            if (isListIsEmpty(PurchaseCategory.ALL)) {
+            if (isListIsEmpty(Category.ALL)) {
                 System.out.println("The purchase list is empty!");
                 break;
             }
@@ -71,21 +70,22 @@ public class PurchasesListUtility {
             printPurchasesListMenu();
 
             int selectedOptionInt = Integer.parseInt(SystemUtility.readData());
+            System.out.println();
 
             if (selectedOptionInt == 6) break;
 
-            PurchaseCategory category = PurchaseCategory.getTypeById(selectedOptionInt);
+            Category category = Category.getTypeById(selectedOptionInt);
 
             switch (category) {
                 case FOOD, CLOTHES, ENTERTAINMENT, OTHER -> {
                     if (isListIsEmpty(category)) {
-                        System.out.println("Purchase list is empty!");
+                        System.out.println("The purchase list is empty!");
                         break;
                     }
 
                     printPurchasesList(category);
                 }
-                default -> printPurchasesList(PurchaseCategory.ALL);
+                default -> printPurchasesList(Category.ALL);
             }
         }
     }
