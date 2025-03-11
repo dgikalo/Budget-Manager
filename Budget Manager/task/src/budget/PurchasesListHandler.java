@@ -60,7 +60,7 @@ public class PurchasesListHandler {
     }
 
 
-    public static void startPurchaseTypesMenu() {
+    public static void startPurchasesListMenu() {
         while (true) {
             if (isListIsEmpty(Category.ALL)) {
                 System.out.println("The purchase list is empty!");
