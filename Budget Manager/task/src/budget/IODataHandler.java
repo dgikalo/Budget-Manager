@@ -3,16 +3,16 @@ package budget;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.LinkedList;
 
 
-public class FileUtility {
+public class IODataHandler {
 
     static final String filePath = "purchases.txt";
 
 
-    static List<String> readFileData() {
+    private static List<String> readFileData() {
         File file = new File(filePath);
         List<String> fileData = new LinkedList<>();
 
@@ -32,35 +32,45 @@ public class FileUtility {
     }
 
 
-    static void fillPurchaseList(List<String> fileData) {
-        for (String string : fileData) {
-            String[] tmpString = string.split(";");
-            int categoryId = Integer.parseInt(tmpString[0]);
+    private static void fillDataStructures(List<String> fileData) {
+        float balance = Float.parseFloat(fileData.removeFirst().split(";")[1]);
 
-            Purchase  purchase = new Purchase(
-                    PurchaseCategory.getTypeById(categoryId),
-                    tmpString[1],
-                    Float.parseFloat(tmpString[2])
+        BalanceHandler.updateBalance(balance);
+
+        for (String string : fileData) {
+            String[] buffer = string.split(";");
+            Purchase purchase = new Purchase(
+                    Category.valueOf(buffer[0]),
+                    buffer[1],
+                    Float.parseFloat(buffer[2])
             );
 
-            PurchasesListUtility.updatePurchasesList(purchase);
+            PurchasesListHandler.updatePurchasesList(purchase);
         }
     }
 
 
-    static void writePurchaseData(Purchase purchase) {
-        int categoryId = purchase.category().getId();
-        String name = purchase.name();
-        float price = purchase.price();
-        String template = String.format("%s;%s;%.2f\n", categoryId, name, price);
-
+    private static void writePurchaseData(float balance, List<Purchase> purchasesList) {
         File file = new File(filePath);
 
-        try (FileWriter fileWriter = new FileWriter(file, true)) {
-            fileWriter.write(template);
+        try (PrintWriter writer = new PrintWriter(file)) {
+            writer.println("BALANCE;" + balance);
+
+            for (Purchase purchase : purchasesList) {
+                writer.printf("%s;%s;%s\n", purchase.category().toString(), purchase.name(), purchase.price());
+            }
 
         } catch (IOException e) {
             System.out.println("File not found.");
         }
+    }
+
+
+    static void readData() {
+        fillDataStructures(readFileData());
+    }
+
+    static void writeData() {
+        writePurchaseData(BalanceHandler.getBalance(), PurchasesListHandler.getPurchasesList());
     }
 }
