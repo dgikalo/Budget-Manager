@@ -1,7 +1,7 @@
 package budget;
 
 
-public final class MainMenuUtility {
+public final class MainMenuHandler {
 
     private static void printMainMenu() {
         String mainMenuOptions = """
@@ -23,36 +23,38 @@ public final class MainMenuUtility {
 
         float incomeValue = Float.parseFloat(SystemUtility.readData());
 
-        BalanceUtility.updateBalance(incomeValue);
+        BalanceHandler.updateBalance(incomeValue);
 
-        System.out.println("Income was added!");
+        System.out.println("Income was added!\n");
     }
 
 
     private static void addPurchaseOption() {
-        PurchaseUtility.startPurchaseMenu();
+        PurchaseHandler.startPurchaseMenu();
     }
 
 
     private static void showListOfPurchases() {
-        PurchasesListUtility.startPurchaseTypesMenu();
+        PurchasesListHandler.startPurchaseTypesMenu();
     }
 
 
     private static void balanceOption() {
-        System.out.printf("Balance: $%.2f\n", BalanceUtility.getBalance());
+        System.out.printf("Balance: $%.2f\n\n", BalanceHandler.getBalance());
     }
 
 
     private static void saveOption() {
-        System.out.println("Purchases were saved!");
+        IODataHandler.writeData();
+
+        System.out.println("Purchases were saved!\n");
     }
 
 
     private static void loadOption() {
         IODataHandler.readData();
 
-        System.out.println("Purchases were loaded!");
+        System.out.println("Purchases were loaded!\n");
     }
 
 
@@ -61,6 +63,7 @@ public final class MainMenuUtility {
             printMainMenu();
 
             int selectedOptionInt = Integer.parseInt(SystemUtility.readData());
+            System.out.println();
 
             switch (selectedOptionInt) {
                 case 1 -> addIncomeOption();
