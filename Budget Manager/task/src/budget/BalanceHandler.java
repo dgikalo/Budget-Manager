@@ -1,6 +1,8 @@
 package budget;
 
+
 public class BalanceUtility {
+
     private static float balance = 0;
 
 
