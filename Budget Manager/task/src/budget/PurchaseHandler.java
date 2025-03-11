@@ -1,12 +1,12 @@
 package budget;
 
 
-public class PurchaseUtility {
+public class PurchaseHandler {
 
     static void printPurchaseMenu() {
         System.out.println("Choose the type of purchase");
 
-        for (PurchaseCategory category : PurchaseCategory.getTypes(false)) {
+        for (Category category : Category.getTypes(false)) {
             System.out.printf("%d) %s\n", category.getId(), category.getName());
         }
 
@@ -14,7 +14,7 @@ public class PurchaseUtility {
     }
 
 
-    private static void createPurchaseRecord(PurchaseCategory category) {
+    private static void createPurchaseRecord(Category category) {
         System.out.println("Enter purchase name:");
         String name = SystemUtility.readData();
 
@@ -23,9 +23,10 @@ public class PurchaseUtility {
 
         Purchase purchase = new Purchase(category, name, price);
 
-        PurchasesListUtility.updatePurchasesList(purchase);
+        PurchasesListHandler.updatePurchasesList(purchase);
+        BalanceHandler.updateBalance(-price);
 
-        System.out.println("Purchase was added!");
+        System.out.println("Purchase was added!\n");
     }
 
 
@@ -34,10 +35,11 @@ public class PurchaseUtility {
             printPurchaseMenu();
 
             int selectedOptionInt = Integer.parseInt(SystemUtility.readData());
+            System.out.println();
 
             if (selectedOptionInt == 5) break;
 
-            PurchaseCategory selectedOptionCategory = PurchaseCategory.getTypeById(selectedOptionInt);
+            Category selectedOptionCategory = Category.getTypeById(selectedOptionInt);
 
             createPurchaseRecord(selectedOptionCategory);
         }
