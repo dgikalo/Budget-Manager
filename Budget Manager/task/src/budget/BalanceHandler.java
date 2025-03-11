@@ -1,7 +1,7 @@
 package budget;
 
 
-public class BalanceUtility {
+public class BalanceHandler {
 
     private static float balance = 0;
 
