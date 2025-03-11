@@ -4,7 +4,8 @@ package budget;
 import java.util.Arrays;
 
 
-public enum PurchaseCategory {
+public enum Category {
+
     FOOD("Food", 1),
     CLOTHES("Clothes", 2),
     ENTERTAINMENT("Entertainment", 3),
@@ -16,7 +17,7 @@ public enum PurchaseCategory {
     private final int id;
 
 
-    PurchaseCategory(String name, int id) {
+    Category(String name, int id) {
         this.name = name;
         this.id = id;
     }
@@ -32,14 +33,14 @@ public enum PurchaseCategory {
     }
 
 
-    static PurchaseCategory[] getTypes(boolean isExtended) {
+    static Category[] getTypes(boolean isExtended) {
         return (isExtended)
-                ? PurchaseCategory.values()
-                : new PurchaseCategory[]{FOOD, CLOTHES, ENTERTAINMENT, OTHER};
+                ? Category.values()
+                : new Category[]{FOOD, CLOTHES, ENTERTAINMENT, OTHER};
     }
 
 
-    static PurchaseCategory getTypeById(int id) {
+    static Category getTypeById(int id) {
         return Arrays
                 .stream(getTypes(true))
                 .filter(category -> category.id == id)
