@@ -35,7 +35,7 @@ public final class MainMenuHandler {
 
 
     private static void showListOfPurchases() {
-        PurchasesListHandler.startPurchaseTypesMenu();
+        PurchasesListHandler.startPurchasesListMenu();
     }
 
 
