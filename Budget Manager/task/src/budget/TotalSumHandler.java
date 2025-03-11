@@ -2,23 +2,23 @@ package budget;
 
 
 import java.util.Map;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 
 
-public class TotalSumUtility {
+public class TotalSumHandler {
 
-    private static final Map<PurchaseCategory, Float> totalSumByCategory = new LinkedHashMap<>();
+    private static final Map<Category, Float> totalSumByCategory = new HashMap<>();
 
 
     static {
-        for (PurchaseCategory category : PurchaseCategory.getTypes(false)) {
+        for (Category category : Category.getTypes(false)) {
             totalSumByCategory.put(category, 0F);
         }
     }
 
 
-    static float getTotalSum(PurchaseCategory category) {
-        return (!category.equals(PurchaseCategory.ALL))
+    static float getTotalSum(Category category) {
+        return (!category.equals(Category.ALL))
                 ? totalSumByCategory.get(category)
                 : totalSumByCategory
                         .values()
@@ -27,7 +27,7 @@ public class TotalSumUtility {
     }
 
 
-    static void updateTotalSum(PurchaseCategory category, float price) {
+    static void updateTotalSum(Category category, float price) {
         totalSumByCategory.merge(category, price, Float::sum);
     }
 }
