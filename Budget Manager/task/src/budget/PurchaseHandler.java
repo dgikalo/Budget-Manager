@@ -1,27 +1,34 @@
 package budget;
 
 
+import java.util.List;
+import java.util.LinkedList;
+
+
 public class PurchaseHandler {
 
-    static void printPurchaseMenu() {
-        System.out.println("Choose the type of purchase");
+    public static void printPurchaseMenu() {
+        List<String> purchasesMenu = new LinkedList<>();
+        purchasesMenu.add("Choose the type of purchase");
 
-        for (Category category : Category.getTypes(false)) {
-            System.out.printf("%d) %s\n", category.getId(), category.getName());
+        for (Type type : Type.getTypes(false)) {
+            purchasesMenu.add(String.format("%d) %s\n", type.getId(), type.getName()));
         }
 
-        System.out.println("5) Back");
+        purchasesMenu.add("5) Back");
+
+        IODataHandler.printData(purchasesMenu);
     }
 
 
-    private static void createPurchaseRecord(Category category) {
+    private static void createPurchaseRecord(Type type) {
         System.out.println("Enter purchase name:");
-        String name = SystemUtility.readData();
+        String name = IODataHandler.getInputValue();
 
         System.out.println("Enter its price:");
-        float price = Float.parseFloat(SystemUtility.readData());
+        float price = Float.parseFloat(IODataHandler.getInputValue());
 
-        Purchase purchase = new Purchase(category, name, price);
+        Purchase purchase = new Purchase(type, name, price);
 
         PurchasesListHandler.updatePurchasesList(purchase);
         BalanceHandler.updateBalance(-price);
@@ -34,12 +41,12 @@ public class PurchaseHandler {
         while (true) {
             printPurchaseMenu();
 
-            int selectedOptionInt = Integer.parseInt(SystemUtility.readData());
+            int selectedOptionInt = IODataHandler.getSelectedOption();
             System.out.println();
 
             if (selectedOptionInt == 5) break;
 
-            Category selectedOptionCategory = Category.getTypeById(selectedOptionInt);
+            Type selectedOptionCategory = Type.getTypeById(selectedOptionInt);
 
             createPurchaseRecord(selectedOptionCategory);
         }
