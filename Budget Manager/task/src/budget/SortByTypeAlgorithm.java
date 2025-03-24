@@ -1,35 +1,42 @@
 package budget;
 
 
-import java.util.List;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.LinkedList;
+import java.util.stream.Collectors;
 
 
-public class SortByCategoryAlgorithm extends SortCertainType implements SortSelectionAlgorithm {
+public class SortByTypeAlgorithm implements SortSelectionAlgorithm {
 
-    @Override
-    protected List<Purchase> sort(List<Purchase> purchasesList, Type type) {
-        return super.sort(purchasesList, type);
+    private Map<Type, Float> sort(Map<Type, Float> totalSumByType) {
+        return totalSumByType.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (prevValue, newValue) -> prevValue,
+                        LinkedHashMap::new
+                ))
+                .reversed();
     }
 
 
     @Override
-    public List<String> getSortedList(List<Purchase> purchasesList, Map<Type, Float> totalSumByType) {
-        List<String> sortedList = new LinkedList<>();
-        Map<Type, Float> sortedMap = new LinkedHashMap<>();
+    public List<String> getSortedList(Map<Type, Float> totalSumByType) {
+        List<String> result = new LinkedList<>();
 
-        totalSumByType.entrySet().stream()
-                .sorted(Map.Entry.comparingByValue())
-                .forEach(entry -> sortedMap.put(entry.getKey(), entry.getValue()));
+        sort(totalSumByType).forEach((type, price) -> {
+            String textTemplate = type.getName() + " - $";
 
-        for (Map.Entry<Type, Float> entry : sortedMap.entrySet()) {
-            List<Purchase> tmp = sort(purchasesList, entry.getKey());
+            textTemplate += (price != 0)
+                    ? String.format("%.2f", price)
+                    : "0";
 
-            tmp.forEach(purchase -> sortedList.add(String.format("%s $%s", purchase.name(), purchase.price())));
-        }
+            result.add(textTemplate);
+        });
 
-        return sortedList;
+        return result;
     }
 }
