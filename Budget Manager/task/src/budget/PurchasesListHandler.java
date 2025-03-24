@@ -2,90 +2,100 @@ package budget;
 
 
 import java.util.List;
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 
 public class PurchasesListHandler {
 
-    private static final List<Purchase> purchasesList = new ArrayList<>();
+    private static final List<Purchase> purchasesList = new LinkedList<>();
 
 
     private static void printPurchasesListMenu() {
-        System.out.println("Choose the type of purchases");
-        for (Category category : Category.getTypes(true)) {
-            System.out.printf("%d) %s\n", category.getId(), category.getName());
+        List<String> purchasesListOptions = new LinkedList<>();
+        purchasesListOptions.add("Choose the type of purchases");
+
+        for (Type type : Type.getTypes(true)) {
+            purchasesListOptions.add(String.format("%d) %s", type.getId(), type.getName()));
         }
 
-        System.out.println("6) Back");
+        purchasesListOptions.add("6) Back");
+
+        IODataHandler.printData(purchasesListOptions);
     }
 
 
-    private static boolean isListIsEmpty(Category category) {
-        return (category.equals(Category.ALL))
+    public static boolean isListIsEmpty(Type type) {
+        return (type.equals(Type.ALL))
                 ? purchasesList.isEmpty()
-                : purchasesList
-                        .stream()
-                        .noneMatch(purchase -> purchase.category() == category);
+                : purchasesList.stream()
+                        .noneMatch(purchase -> purchase.type() == type);
     }
 
 
-    static void updatePurchasesList(Purchase purchase) {
+    public static void updatePurchasesList(Purchase purchase) {
         purchasesList.add(purchase);
 
         float price = purchase.price();
 
-        TotalSumHandler.updateTotalSum(purchase.category(), price);
+        TotalSumHandler.updateTotalSum(purchase.type(), price);
     }
 
 
-    private static void printPurchasesList(Category category) {
-        System.out.println(category.getName() + ":");
+    private static void printPurchasesList(Type type) {
+        List<String> listForPrinting = new LinkedList<>();
 
-        if (category.equals(Category.ALL)) {
-            purchasesList.forEach(purchase -> System.out.printf("%s $%.2f\n", purchase.name(), purchase.price()));
+        System.out.println(type.getName() + ":");
+
+        if (Type.ALL.equals(type)) {
+            purchasesList.forEach(purchase -> {
+                listForPrinting.add(String.format("%s $%.2f", purchase.name(), purchase.price()));
+            });
 
         } else {
-            purchasesList
-                    .stream()
-                    .filter(purchase -> purchase.category() == category)
-                    .forEach(purchase -> System.out.printf("%s $%.2f\n", purchase.name(), purchase.price()));
+            purchasesList.stream()
+                    .filter(purchase -> purchase.type() == type)
+                    .forEach(purchase -> {
+                        listForPrinting.add(String.format("%s $%.2f", purchase.name(), purchase.price()));
+                    });
         }
 
-        System.out.printf("Total sum: $%.2f\n\n", TotalSumHandler.getTotalSum(category));
+        IODataHandler.printData(listForPrinting);
+
+        System.out.printf("Total sum: $%.2f\n\n", TotalSumHandler.getTotalSum(type).get(type));
     }
 
 
-    static List<Purchase> getPurchasesList() {
+    public static List<Purchase> getPurchasesList() {
         return purchasesList;
     }
 
 
     public static void startPurchasesListMenu() {
         while (true) {
-            if (isListIsEmpty(Category.ALL)) {
-                System.out.println("The purchase list is empty!");
+            if (isListIsEmpty(Type.ALL)) {
+                IODataHandler.printEmptyError();
                 break;
             }
 
             printPurchasesListMenu();
 
-            int selectedOptionInt = Integer.parseInt(SystemUtility.readData());
+            int selectedOptionInt = IODataHandler.getSelectedOption();
             System.out.println();
 
             if (selectedOptionInt == 6) break;
 
-            Category category = Category.getTypeById(selectedOptionInt);
+            Type type = Type.getTypeById(selectedOptionInt);
 
-            switch (category) {
+            switch (type) {
                 case FOOD, CLOTHES, ENTERTAINMENT, OTHER -> {
-                    if (isListIsEmpty(category)) {
-                        System.out.println("The purchase list is empty!");
+                    if (isListIsEmpty(type)) {
+                        IODataHandler.printEmptyError();
                         break;
                     }
 
-                    printPurchasesList(category);
+                    printPurchasesList(type);
                 }
-                default -> printPurchasesList(Category.ALL);
+                default -> printPurchasesList(Type.ALL);
             }
         }
     }
