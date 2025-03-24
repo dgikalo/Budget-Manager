@@ -7,27 +7,31 @@ import java.util.HashMap;
 
 public class TotalSumHandler {
 
-    private static final Map<Category, Float> totalSumByCategory = new HashMap<>();
+    private static final Map<Type, Float> totalSum = new HashMap<>();
 
 
     static {
-        for (Category category : Category.getTypes(false)) {
-            totalSumByCategory.put(category, 0F);
+        for (Type type : Type.getTypes(true)) {
+            totalSum.put(type, 0F);
         }
     }
 
 
-    static float getTotalSum(Category category) {
-        return (!category.equals(Category.ALL))
-                ? totalSumByCategory.get(category)
-                : totalSumByCategory
-                        .values()
-                        .stream()
-                        .reduce(0.0F, Float::sum);
+    public static void updateTotalSum(Type type, float price) {
+        totalSum.merge(type, price, Float::sum);
+        totalSum.replace(Type.ALL, calculateTotalSum());
     }
 
 
-    static void updateTotalSum(Category category, float price) {
-        totalSumByCategory.merge(category, price, Float::sum);
+    public static Map<Type, Float> getTotalSum(Type type) {
+        return Map.of(type, totalSum.get(type));
+    }
+
+
+    private static float calculateTotalSum() {
+        return totalSum.entrySet().stream()
+                .filter(entry -> entry.getKey() != Type.ALL)
+                .map(Map.Entry::getValue)
+                .reduce(0.0F, Float::sum);
     }
 }
