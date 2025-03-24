@@ -1,4 +1,5 @@
 package budget;
 
-public record Purchase(Category category, String name, float price) {
+
+public record Purchase(Type type, String name, float price) {
 }
