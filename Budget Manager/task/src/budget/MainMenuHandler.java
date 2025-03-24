@@ -1,27 +1,32 @@
 package budget;
 
 
+import java.util.List;
+
+
 public final class MainMenuHandler {
 
     private static void printMainMenu() {
-        String mainMenuOptions = """
-                Choose your action:
-                1) Add income
-                2) Add purchase
-                3) Show list of purchases
-                4) Balance
-                5) Save
-                6) Load
-                0) Exit""";
+        List<String> mainMenuOptions = List.of(
+                "Choose your action:",
+                "1) Add income",
+                "2) Add purchase",
+                "3) Show list of purchases",
+                "4) Balance",
+                "5) Save",
+                "6) Load",
+                "7) Analyze (Sort)",
+                "0) Exit"
+        );
 
-        System.out.println(mainMenuOptions);
+        IODataHandler.printData(mainMenuOptions);
     }
 
 
     private static void addIncomeOption() {
         System.out.println("Enter income:");
 
-        float incomeValue = Float.parseFloat(SystemUtility.readData());
+        float incomeValue = Float.parseFloat(IODataHandler.getInputValue());
 
         BalanceHandler.updateBalance(incomeValue);
 
@@ -58,11 +63,16 @@ public final class MainMenuHandler {
     }
 
 
-    static void startMainMenu() {
+    private static void analyzeOption() {
+        SortingHandler.handleSortingMenu();
+    }
+
+
+    public static void startMainMenu() {
         while (true) {
             printMainMenu();
 
-            int selectedOptionInt = Integer.parseInt(SystemUtility.readData());
+            int selectedOptionInt = IODataHandler.getSelectedOption();
             System.out.println();
 
             switch (selectedOptionInt) {
@@ -72,6 +82,7 @@ public final class MainMenuHandler {
                 case 4 -> balanceOption();
                 case 5 -> saveOption();
                 case 6 -> loadOption();
+                case 7 -> analyzeOption();
                 case 0 -> {
                     System.out.println("Bye!");
                     return;
