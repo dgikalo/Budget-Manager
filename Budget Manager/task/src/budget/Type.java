@@ -23,24 +23,24 @@ public enum Type {
     }
 
 
-    String getName() {
+    public String getName() {
         return name;
     }
 
 
-    int getId() {
+    public int getId() {
         return id;
     }
 
 
-    static Type[] getTypes(boolean isExtended) {
+    public static Type[] getTypes(boolean isExtended) {
         return (isExtended)
                 ? Type.values()
                 : new Type[]{FOOD, CLOTHES, ENTERTAINMENT, OTHER};
     }
 
 
-    static Type getTypeById(int id) {
+    public static Type getTypeById(int id) {
         return Arrays.stream(getTypes(true))
                 .filter(category -> category.id == id)
                 .findFirst()
